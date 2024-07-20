@@ -30,4 +30,4 @@ const KeyTokenSchema = new Schema<IKeyToken>(
 
 const KeyTokenModel = model<IKeyToken>("KeyToken", KeyTokenSchema);
 
-export { KeyTokenModel, IKeyToken };
+export { IKeyToken, KeyTokenModel };
