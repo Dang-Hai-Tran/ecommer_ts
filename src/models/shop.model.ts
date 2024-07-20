@@ -9,36 +9,41 @@ interface IShop {
     roles: string[];
 }
 
-const ShopSchema = new Schema<IShop>({
-    name: {
-        type: String,
-        required: true,
-        unique: true,
-        index: true,
+const ShopSchema = new Schema<IShop>(
+    {
+        name: {
+            type: String,
+            required: true,
+            unique: true,
+            index: true,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        status: {
+            type: String,
+            default: "inactive",
+        },
+        verify: {
+            type: Boolean,
+            default: false,
+        },
+        roles: {
+            type: [String],
+            default: [],
+        },
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    status: {
-        type: String,
-        default: "inactive",
-    },
-    verify: {
-        type: Boolean,
-        default: false,
-    },
-    roles: {
-        type: [String],
-        default: [],
-    },
-});
+    {
+        timestamps: true,
+    }
+);
 
 const ShopModel = model<IShop>("Shop", ShopSchema);
 
-export { ShopModel , IShop };
+export { ShopModel, IShop };

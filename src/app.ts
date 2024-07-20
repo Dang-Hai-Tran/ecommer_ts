@@ -1,8 +1,7 @@
-import { NextFunction } from "connect";
-import express, { Express, Request, Response } from "express";
-import morgan from "morgan";
-import helmet from "helmet";
 import compression from "compression";
+import express, { Express } from "express";
+import helmet from "helmet";
+import morgan from "morgan";
 import { connectToMongo } from "./dbs/init.mongodb";
 import mainRouter from "./routes";
 
@@ -12,6 +11,8 @@ const app: Express = express();
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
+app.use(express.json());
+app.use(express.urlencoded());
 
 // Connect to MongoDB
 connectToMongo();
