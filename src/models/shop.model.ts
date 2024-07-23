@@ -46,4 +46,4 @@ const ShopSchema = new Schema<IShop>(
 
 const ShopModel = model<IShop>("Shop", ShopSchema);
 
-export { ShopModel, IShop };
+export { IShop, ShopModel };

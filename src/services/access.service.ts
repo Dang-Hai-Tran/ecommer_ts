@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { Types } from "mongoose";
+import { KeyTokenModel } from "../models/keyToken.model";
 import { ShopModel } from "../models/shop.model";
 import { ErrorResponse, ErrorStatus } from "../response/error.response";
 import { createTokenPair } from "../utils/auth.util";
@@ -27,40 +29,48 @@ class AccessService {
         return data;
     }
 
-    static async logIn(email: string, password: string, refreshToken?: string) {
+    static async logIn(email: string, password: string) {
         const foundShop = await ShopModel.findOne({ email: email });
         if (!foundShop) {
             throw new ErrorResponse("Shop not registered", ErrorStatus.BadRequest);
         }
         const match = await bcrypt.compare(password, foundShop.password);
         if (!match) {
-            throw new ErrorResponse("Password not match", ErrorStatus.Forbidden);
+            throw new ErrorResponse("Password not match", ErrorStatus.Unauthorized);
         }
-        const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-            modulusLength: 4096,
-            publicKeyEncoding: {
-                type: "spki",
-                format: "pem",
-            },
-            privateKeyEncoding: {
-                type: "pkcs8",
-                format: "pem",
-            },
-        });
+        const keyToken = await KeyTokenModel.findOne({ shop: foundShop._id });
+        const { privateKey, publicKey } = keyToken
+            ? { privateKey: keyToken.privateKey, publicKey: keyToken.publicKey }
+            : crypto.generateKeyPairSync("rsa", {
+                  modulusLength: 4096,
+                  publicKeyEncoding: {
+                      type: "spki",
+                      format: "pem",
+                  },
+                  privateKeyEncoding: {
+                      type: "pkcs8",
+                      format: "pem",
+                  },
+              });
         // Save public key in keytoken document
-        await KeyTokenService.createKeyToken(foundShop._id, publicKey);
+        if (!keyToken) {
+            await KeyTokenService.createKeyToken(foundShop._id, publicKey, privateKey);
+        }
         const payload = {
             shopId: foundShop.id,
             email: foundShop.email,
         };
-        const privateKeyObject = crypto.createPrivateKey(privateKey);
-        const tokens = await createTokenPair(payload, privateKeyObject);
-        // console.log("Create token pair successfully: ", tokens);
+        const tokens = await createTokenPair(payload, privateKey);
         const data = {
             shop: getInfoData(["_id", "name", "email"], foundShop),
             tokens,
         };
         return data;
+    }
+
+    static async logOut(userId: Types.ObjectId) {
+        const objectKeyToken = await KeyTokenModel.deleteOne({ shop: userId });
+        return objectKeyToken;
     }
 }
 

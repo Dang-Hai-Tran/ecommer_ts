@@ -4,9 +4,6 @@ dotenv.config();
 const dev = {
     app: {
         port: process.env.DEV_PORT || "3000",
-        jwtSecret: process.env.DEV_JWT_SECRET || "jwt-secret",
-        jwtExpired: process.env.DEV_JWT_EXPIRED || "1h",
-        secretKey: process.env.DEV_SECRET_KEY || "key-secret",
     },
     db: {
         host: process.env.DEV_DB_HOST || "localhost",
@@ -18,9 +15,6 @@ const dev = {
 const pro = {
     app: {
         port: process.env.PRO_PORT || "3000",
-        jwtSecret: process.env.PRO_JWT_SECRET || "jwt-secret",
-        jwtExpired: process.env.PRO_JWT_EXPIRED || "1h",
-        secretKey: process.env.PRO_SECRET_KEY || "ket-secret",
     },
     db: {
         host: process.env.PRO_DB_HOST || "localhost",

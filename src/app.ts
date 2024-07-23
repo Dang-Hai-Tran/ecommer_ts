@@ -22,7 +22,7 @@ app.use("/api/v1", mainRouter);
 // Handle 404 not found
 app.use((req: Request, res: Response, next: NextFunction) => {
     const error = new ErrorResponse(ErrorReason.NotFound, ErrorStatus.NotFound);
-    next(error);
+    return next(error);
 });
 // Error handling middleware
 const errorHandler: ErrorRequestHandler = (error: ErrorResponse, req: Request, res: Response, next: NextFunction) => {

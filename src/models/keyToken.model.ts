@@ -3,7 +3,8 @@ import { Schema, Types, model } from "mongoose";
 interface IKeyToken {
     shop: Types.ObjectId;
     publicKey: string;
-    refreshToken: string[];
+    privateKey: string;
+    refreshTokenUsed: string[];
 }
 
 // Save publicKey and Array[refressToken]
@@ -18,7 +19,11 @@ const KeyTokenSchema = new Schema<IKeyToken>(
             type: String,
             required: true,
         },
-        refreshToken: {
+        privateKey: {
+            type: String,
+            required: true,
+        },
+        refreshTokenUsed: {
             type: [String],
             default: [],
         },

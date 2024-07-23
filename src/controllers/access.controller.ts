@@ -10,7 +10,7 @@ class AccessController {
             const response = new SuccessResponse(SuccessReason.Created, SuccessStatus.Created, data);
             response.send(res);
         } catch (error) {
-            next(error);
+            return next(error);
         }
     }
 
@@ -21,7 +21,17 @@ class AccessController {
             const response = new SuccessResponse(SuccessReason.OK, SuccessStatus.OK, data);
             response.send(res);
         } catch (error) {
-            next(error);
+            return next(error);
+        }
+    }
+
+    public static async logOut(req: Request, res: Response, next: NextFunction) {
+        try {
+            const data = await AccessService.logOut(req.userId!);
+            const response = new SuccessResponse(SuccessReason.OK, SuccessStatus.OK, data);
+            response.send(res);
+        } catch (error) {
+            return next(error);
         }
     }
 }

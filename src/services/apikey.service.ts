@@ -8,13 +8,13 @@ class ApiKeyService {
     }
 
     static async createNewApiKey() {
-        const apiKey = crypto.randomBytes(64).toString("hex");
-        await ApiKeyModel.create({
-            key: apiKey,
+        const apiKeyString = crypto.randomBytes(64).toString("hex");
+        const apiKey = await ApiKeyModel.create({
+            key: apiKeyString,
             status: true,
             permisions: ["0000"],
         });
-        return apiKey;
+        return apiKey.key;
     }
 }
 
