@@ -16,9 +16,11 @@ This project is a TypeScript-based ecommerce application that utilizes Express.j
 ## Features
 - User registration and authentication
 - Secure password hashing using bcrypt
-- RESTful API structure
+- JWT-based authentication with access and refresh tokens
 - Middleware for logging, security, and compression
 - MongoDB connection management using the Singleton pattern
+- API key management for enhanced security
+- Comprehensive error handling and response structure
 
 ## Prerequisites
 Before you begin, ensure you have the following installed:
@@ -30,8 +32,8 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
-   cd <repository-name>
+   git clone https://github.com/Dang-Hai-Tran/ecommer_ts.git
+   cd ecommer_ts
    ```
 
 2. **Install dependencies:**
@@ -58,13 +60,18 @@ src/
 ├── routes/ # API routes
 ├── services/ # Business logic
 ├── utils/ # Utility functions
+├── scripts/ # Scripts
 └── app.ts # Main application file
+
 server.ts # Server execution
 ```
 
 
 ## API Endpoints
 - `POST /api/v1/shop/signup`: Register a new shop
+- `POST /api/v1/shop/login`: Log in to an existing shop
+- `POST /api/v1/shop/logout`: Log out from the shop
+- `POST /api/v1/shop/token/refresh`: Refresh access token using a valid refresh token
 - Additional endpoints can be added as the application grows.
 
 ## Testing
