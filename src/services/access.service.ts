@@ -41,8 +41,8 @@ class AccessService {
         const keyToken = await KeyTokenModel.findOne({ shop: foundShop._id });
         const { privateKey, publicKey } = keyToken
             ? { privateKey: keyToken.privateKey, publicKey: keyToken.publicKey }
-            : crypto.generateKeyPairSync("rsa", {
-                  modulusLength: 4096,
+            : crypto.generateKeyPairSync("ec", {
+                  namedCurve: "prime256v1",
                   publicKeyEncoding: {
                       type: "spki",
                       format: "pem",

@@ -11,12 +11,12 @@ interface PayLoad extends JwtPayload {
 
 const createTokenPair = async (payload: JwtPayload, privateKey: Secret) => {
     const accessToken = jsonwebtoken.sign(payload, privateKey, {
-        algorithm: "RS256",
+        algorithm: "ES256",
         expiresIn: "2 days",
     });
 
     const refreshToken = jsonwebtoken.sign(payload, privateKey, {
-        algorithm: "RS256",
+        algorithm: "ES256",
         expiresIn: "7 days",
     });
     return { accessToken, refreshToken };
