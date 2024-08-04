@@ -6,6 +6,7 @@ const ErrorStatus = {
     PaymentRequired: 402,
     Forbidden: 403,
     NotFound: 404,
+    InternalServerError: 500,
 };
 
 const ErrorReason = {
@@ -14,6 +15,7 @@ const ErrorReason = {
     PaymentRequired: "Payment required",
     Forbidden: "Forbidden",
     NotFound: "Not Found",
+    InternalServerError: "Internal Server Error",
 };
 
 class ErrorResponse extends Error {

@@ -9,17 +9,23 @@ interface PayLoad extends JwtPayload {
     shopId: string;
 }
 
-const createTokenPair = async (payload: JwtPayload, privateKey: Secret) => {
-    const accessToken = jsonwebtoken.sign(payload, privateKey, {
-        algorithm: "ES256",
-        expiresIn: "2 days",
-    });
+const createTokenPair = (payload: JwtPayload, privateKey: Secret) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const accessToken = jsonwebtoken.sign(payload, privateKey, {
+                algorithm: "ES256",
+                expiresIn: "2 days",
+            });
 
-    const refreshToken = jsonwebtoken.sign(payload, privateKey, {
-        algorithm: "ES256",
-        expiresIn: "7 days",
+            const refreshToken = jsonwebtoken.sign(payload, privateKey, {
+                algorithm: "ES256",
+                expiresIn: "7 days",
+            });
+            resolve({ accessToken, refreshToken });
+        } catch (error) {
+            reject(new ErrorResponse("Sign tokens error", ErrorStatus.InternalServerError));
+        }
     });
-    return { accessToken, refreshToken };
 };
 
 const isValidToken = (token: string, publicKey: Secret, payload: PayLoad) => {

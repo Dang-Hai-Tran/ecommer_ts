@@ -39,23 +39,36 @@ class AccessService {
             throw new ErrorResponse("Password not match", ErrorStatus.Unauthorized);
         }
         const keyToken = await KeyTokenModel.findOne({ shop: foundShop._id });
-        const { privateKey, publicKey } = keyToken
-            ? { privateKey: keyToken.privateKey, publicKey: keyToken.publicKey }
-            : crypto.generateKeyPairSync("ec", {
-                  namedCurve: "prime256v1",
-                  publicKeyEncoding: {
-                      type: "spki",
-                      format: "pem",
-                  },
-                  privateKeyEncoding: {
-                      type: "pkcs8",
-                      format: "pem",
-                  },
-              });
-        // Save public key in keytoken document
-        if (!keyToken) {
+        let privateKey: string, publicKey: string;
+        if (keyToken) {
+            privateKey = keyToken.privateKey;
+            publicKey = keyToken.publicKey;
+        } else {
+            [privateKey, publicKey] = await new Promise((resolve, reject) => {
+                crypto.generateKeyPair(
+                    "ec",
+                    {
+                        namedCurve: "prime256v1",
+                        publicKeyEncoding: {
+                            type: "spki",
+                            format: "pem",
+                        },
+                        privateKeyEncoding: {
+                            type: "pkcs8",
+                            format: "pem",
+                        },
+                    },
+                    (err, publickey, privatekey) => {
+                        if (err) {
+                            return reject(new ErrorResponse("Generate keys error", ErrorStatus.InternalServerError));
+                        }
+                        resolve(([privateKey, publicKey] = [privatekey, publickey]));
+                    }
+                );
+            });
             await KeyTokenService.createKeyToken(foundShop._id, publicKey, privateKey);
         }
+
         const payload = {
             shopId: foundShop.id,
             email: foundShop.email,
